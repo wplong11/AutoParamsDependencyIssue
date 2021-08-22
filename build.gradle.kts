@@ -15,6 +15,23 @@ repositories {
     mavenCentral()
 }
 
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            val isJunitBom = requested.group == "org.junit" && requested.name.startsWith("junit-bom")
+            val isJunitJupiter = requested.group == "org.junit.jupiter" && requested.name.startsWith("junit-jupiter")
+            val shouldForceVersion = isJunitBom || isJunitJupiter
+//            val shouldForceVersion = arrayOf(
+//                "org.junit" to "junit-bom",
+//                "org.junit.jupiter" to "junit-jupiter",
+//            ).any { requested.group == it.first && requested.name.startsWith(it.second) }
+            if (shouldForceVersion) {
+                useVersion("5.6.0")
+            }
+        }
+    }
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
